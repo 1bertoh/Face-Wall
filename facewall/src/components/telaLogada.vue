@@ -3,7 +3,7 @@
     <!--Menu nav-->
     <v-app-bar fixed hide-on-scroll dark class="purple darken-4">
       <v-toolbar-title class="white--text display-1">
-        <span @click="go">Face</span>
+        <span @click="goToProfile">Face</span>
         <span class="font-weight-black">Wall</span>
       </v-toolbar-title>
 
@@ -46,121 +46,48 @@
       </div>
     </v-app-bar>
     <!--Fim menu nav-->
-    <!--compnente de posts-->
-    <FriendsPosts class="mt-12" />
-    <!--Essa é a barra mostrada qnd o minichat esta minimizado-->
-    <v-flex md6>
-      <div id="chatWindow2" v-show="tool" class="hidden-sm-and-down" style>
-        <v-toolbar dense dark color="primary">
-          <v-toolbar-title>{{friends[cn].name}}</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-icon @click="tool  = false">close</v-icon>
-          <v-icon @click="tool = true">minimize</v-icon>
-          <v-icon @click="tool = false, miniChat = true">launch</v-icon>
-        </v-toolbar>
-      </div>
-      <!--Fim da da barra-->
-      <!--Mini janela de chat-->
-      <div id="teste" class="hidden-sm-and-down">
-        <div id="chatWindow" v-show="miniChat" class="hidden" style>
-          <v-toolbar dense dark color="primary">
-            <v-toolbar-title>{{friends[cn].name}}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-icon @click="miniChat = false">close</v-icon>
-            <v-icon @click="miniChat = false, tool = true">minimize</v-icon>
-            <v-icon @click="minmax = true">launch</v-icon>
-          </v-toolbar>
-          <v-container v-show="minmax">
-            <div id="chatbox">
-              <v-list id="msgArea" class="px-2">
-                <v-avatar size="avatarSize" color="red" width="30" height="30">
-                  <img :src="this.friends[cn].pic" alt="alt" />
-                </v-avatar>
-                <div v-for="(chat, index) in conversation[cn]" :key="chat.index">
-                  <p v-show="chat.received" id="p1">
-                    <span class="caption">{{chat.recTime}}</span>
-                    <br />
-                    <span>{{chat.received}}</span>
-                  </p>
-                  <v-spacer></v-spacer>
-                  <p id="p2" class="text-right">
-                    <span class="caption">{{chat.sentTime}}</span>
-                    <br />
-                    <span class="pr-2">{{chat.sent}}</span>
-                  </p>
-                </div>
-              </v-list>
-              <v-text-field
-                class="blue-grey lighten-2"
-                tile
-                v-model="chattxt"
-                name="name"
-                label="message"
-                multi-line
-                append-outer-icon="send"
-                @click:append-outer="sendMsg"
-                id="chatField"
-              ></v-text-field>
-            </div>
-          </v-container>
-        </div>
-        <!--fim da mini chanela-->
-        <!--botao pra abrir drawer-->
-        <div id="doi">
-          <v-container class="fill-height">
-            <v-btn id="oi" elevation-14 color="lime" dark @click.stop="drawer = !drawer">
-              <v-icon>people</v-icon>
-            </v-btn>
-          </v-container>
-          <!--fim do botão-->
-          <!-- drawer  com a lsita de amgs-->
-          <v-navigation-drawer class="purple lighten-1" v-model="drawer" absolute right>
-            <v-app-bar dark class="purple darken-3 #">
-              <v-text-field width="80%"
-              name="name"
-              label="friends"
-              id="id"
-              prepend-icon="search">
-              </v-text-field>
-            </v-app-bar>
-            <v-divider></v-divider>
-            <v-list shaped>
-              <v-list-item
-                v-for="(friend, index) in friends"
-                :key="index"
-                @click="aviso(index), miniChat= true"
-              >
-                <v-list-item-avatar>
-                  <v-img :src="friend.pic"></v-img>
-                </v-list-item-avatar>
 
-                <v-list-item-content>
-                  <v-list-item-title>{{friend.name}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
 
-            <v-divider></v-divider>
 
-            <v-list dense>
-              <v-list-item v-for="item in items" :key="item.title" link>
-                <v-list-item-icon>
-                  <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-icon>
+    <v-row justify='center'>
+      <v-col md="3" class="hidden-sm-and-down">
+        <!--minichat box componnet-->
+        <miniChatBox
+        :friendId =' friendId'
+        :miniChat = 'miniChat'
+        :normalizados = 'normalizados'
+        @sendMsg = 'sendMsg($event)'>
+        </miniChatBox>
+        <!--fim mini chat box xomponnet-->
+      </v-col>
 
-                <v-list-item-content>
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-navigation-drawer>
-        </div>
-      </div>
-    </v-flex>
+      <v-col justify='center' cols="11" md="6" >
+        <!--compnente de posts-->
+        <FriendsPosts
+        :friends = 'friends'
+        :normalizados = 'normalizados'
+        @addpost = 'addPosts($event)'
+        class="mt-12" />
+        <!--Fim componen de posts-->
+      </v-col>
+
+      <v-col md="3" class="hidden-sm-and-down">
+        <!-- friend List component-->
+        <friendsList
+        :friends = 'friends'
+        :filteredFriends = 'friends'
+        :normalizados = 'normalizados'
+        @getfriendid = 'getFriendId($event)'>
+        </friendsList>
+        <!--fim friend list component-->
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
+import miniChatBox from '@/components/chat/miniChatBox';
+import friendsList from '@/components/chat/friendList';
 import axios from 'axios';
 import FriendsPosts from './posts/FriendsPosts';
 
@@ -168,14 +95,15 @@ export default {
   name: 'telaLogada',
   created() {
     this.friendsList();
-    this.postsList();
-    this.foto();
   },
-  components: { FriendsPosts },
+  components: {
+    FriendsPosts,
+    miniChatBox,
+    friendsList,
+  },
 
   data() {
     return {
-      img: './assets/icon-user.png',
       nome: this.$route.params.firstName,
       picture: this.$route.params.pic,
       dados: this.$route.params,
@@ -185,10 +113,8 @@ export default {
         },
       ],
       friends: [],
-      posts: [],
       load: false,
-      cn: 0,
-      drawer: false,
+      friendId: 0,
       value: true,
       miniChat: false,
       minmax: true,
@@ -196,11 +122,12 @@ export default {
       tool: false,
       online: true,
       offline: false,
+      normalizados: '',
       conversation: [
         [
           {
             // cada index é um id, dentro to index a ordem é receivedTime, received, sentTime e sent
-            received: 'oi',
+            received: 'oi', // dentro d cada array será add mais obj
             recTime: '18:30',
             sent: 'oiiw',
             sentTime: '18:31',
@@ -279,52 +206,37 @@ export default {
           },
         ],
       ],
+      friendsPostsPic: []
     };
   },
-  watch: {},
 
   methods: {
     friendsList() {
       this.load = true;
-      const url = 'https://jsonplaceholder.typicode.com/users';
-      axios.get(url).then((response) => {
-        this.friends = response.data;
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < this.friends.length; i++) {
-          this.friends[i].pic = `./static/friend${i + 1}.jpg`;
-        }
-      });
-    },
-    aviso(index) {
-      this.cn = index;
-    },
-    sendMsg() {
-      if (this.chattxt.trim() === '') {
-        this.alertPost = true;
-        return;
-      }
-      const d = new Date();
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
-      this.conversation[this.cn].push({
-        sentTime: `${hours}: ${minutes}`,
-        sent: this.chattxt,
-      });
-      this.chattxt = '';
-    },
-    postsList() {
-      this.load = true;
-      const url = 'https://jsonplaceholder.typicode.com/posts';
-      axios
-        .get(url)
+      axios.get('https://jsonplaceholder.typicode.com/users')
         .then((response) => {
-          this.posts = response.data;
-        })
-        .finally(() => {
-          this.load = false;
+        // eslint-disable-next-line no-plusplus
+          this.friends = response.data;
+          for (let i = 0; i < this.friends.length; i++) {
+            this.friends[i].pic = `./static/friend${i + 1}.jpg`;
+            this.friends[i].chat = this.conversation[i] // add o obj chat nos friends
+            this.friends[i].post = this.friendsPostsPic[i];
+            this.postPicRender(i);
+          }
+          this.toNormalize();
         });
     },
-    go() {
+    toNormalize() {
+      this.normalizados = this.friends.reduce((soma, curr) => {
+        soma[curr.id] = curr;
+        return soma;
+      }, {})
+    },
+    getFriendId(id) {
+      this.friendId = id;
+      this.miniChat = true;
+    },
+    goToProfile() {
       this.$router.push({
         name: 'profile',
         params: {
@@ -341,6 +253,27 @@ export default {
         },
       });
     },
+    sendMsg(txt) {
+      const d = new Date();
+      const hours = d.getHours();
+      const minutes = d.getMinutes();
+      this.normalizados[this.friendId].chat.push({
+        sentTime: `${hours}: ${minutes}`,
+        sent: txt,
+      });
+    },
+    addPosts(post) {
+      this.friendsPostsPic = post;
+    },
+    postPicRender(i) {
+      if(this.friends[i].post.length <= 1) {
+        this.friends[i].postType1 = 'v-img';
+        this.friends[i].postType2 = 'v-img';
+      } else {
+        this.friends[i].postType1 = 'v-carousel';
+        this.friends[i].postType2 = 'v-carousel-item';
+      }
+    }
   },
 };
 </script>
@@ -351,55 +284,13 @@ export default {
 #lm {
   top: 2.6em;
 }
-#p1 {
-  min-height: 3em;
-  min-width: 3em;
-  max-width: 80%;
-}
-#p2 {
-  margin-top: 0.5em;
-}
-#oi {
-  width: 100%;
-  top: 57%;
-  left: 5%;
-}
-#doi {
-  position: fixed;
-  top: 15vh;
-  left: 77vw;
-  height: 32em;
-  width: 21%;
-  background-color: #79109f;
-}
-#chatWindow2 {
-  margin-left: 1%;
-  width: 28%;
-  position: fixed;
-  right: 70vw;
-  top: 93%;
-  background-color: red;
-}
-#chatWindow {
-  margin-left: 1%;
-  width: 28%;
-  position: fixed;
-  right: 70vw;
-  top: 49%;
-  background-color: lime;
-}
-#chatbox {
-  background-color: (122, 33, 48);
-
-  height: 40vh;
-}
 #list {
   width: 20em;
   position: fixed;
   bottom: 0.5em;
 }
-#msgArea {
-  height: 12.1em;
-  overflow: auto;
+#alou{
+  z-index: 2;
 }
+
 </style>

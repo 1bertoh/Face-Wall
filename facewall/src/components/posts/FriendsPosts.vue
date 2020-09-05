@@ -1,13 +1,11 @@
 <template>
   <div>
     <v-container class fill-height grid-list-md>
-      <v-layout row>
-        <v-flex md9 class>
           <v-row justify="center">
-            <v-card width="60%" id="postes">
+            <v-card width="100%"  id="postes">
               <v-row justify="center">
-                <v-col cols="12" md="11" sm="11" xl="11">
-                  <div class>
+                <v-col >
+                  <div >
                     <v-textarea
                       name="name"
                       placeholder="What are you thinking?"
@@ -42,20 +40,20 @@
                     <v-icon>add_photo_alternate</v-icon>
                   </v-btn>
 
-                  <v-btn id="btn" @click="teste" color="success">post</v-btn>
+                  <v-btn id="btn" @click="toPost" color="success">post</v-btn>
                 </v-col>
               </v-row>
             </v-card>
 
             <!--meus posts-->
             <v-card
-              width="60%"
+              width="100%"
               id="postes"
               v-for="(post, index) in myPost"
               :key="post.text"
               class="my-3"
             >
-              <v-layout row wrap>
+               
                 <v-list-item class="py-2">
                   <v-list-item-avatar width="55" height="60" color="gray">
                     <img :src="$route.params.pic" alt />
@@ -114,14 +112,14 @@
                   <v-spacer></v-spacer>
                   <v-btn small right color="success">enviar</v-btn>
                 </v-card-actions>
-              </v-layout>
+              
             </v-card>
             <!--fim meus posts-->
 
             <v-card
-              width="60%"
+             
               id="postes"
-              v-for="(friend, index) in friends"
+              v-for="(friend, index) in normalizados"
               :key="friend.name"
               class="my-3"
             >
@@ -131,25 +129,29 @@
                     <img :src="friend.pic" alt />
                   </v-list-item-avatar>
                   <v-list-item-content class="font-weight-medium headline" left>
-                    {{friend.name}}{{index}}
+                    {{friend.name}}
                     <span class="font-weight-medium caption">last week</span>
                   </v-list-item-content>
                 </v-list-item>
 
                 <v-divider></v-divider>
 
-                <v-flex md12 class="d-flex justify-center">
-                  <v-carousel abs>
+                <v-col cols="12" >
+                  {{friend.img}} {{friend.img1}}
+                  <v-carousel
+                  :is= 'friend.postType1'
+                  abs>
                     <v-carousel-item
-                      v-for="(poste, i) in pics.friends[index]"
+                      :is= 'friend.postType2'
+                      v-for="(poste, i) in friend.post"
                       :key="poste"
                       :src="poste"
                     />
                   </v-carousel>
-                </v-flex>
+                </v-col>
 
                 <v-card-text>{{posts[index].body}}</v-card-text>
-                <v-flex md12 sm12 xs12>
+                
                   <v-card-actions>
                     <v-btn color="success" :id="`cor${index}`" @click="like(index)" fab small>
                       <v-icon small>favorite</v-icon>
@@ -161,7 +163,7 @@
                       <v-icon small>share</v-icon>
                     </v-btn>
                   </v-card-actions>
-                </v-flex>
+                
                 <v-col
                   block
                   col="12"
@@ -192,7 +194,7 @@
               </v-layout>
             </v-card>
           </v-row>
-        </v-flex>
+        
         <div class="hidden-sm-and-down" justify>
           <v-flex md5>
             <div id="list"></div>
@@ -207,7 +209,8 @@ import axios from 'axios';
 import { required, maxLength } from 'vuelidate/lib/validators';
 
 export default {
-  name: 'telaLogada',
+  name: 'FriendsPosts',
+  props: ['friends', 'normalizados'],
   validations: {
     myPostTxt: {
       required,
@@ -215,13 +218,14 @@ export default {
     },
   },
   created() {
-    this.friendsList();
     this.postsList();
+    this.friendsList();
+    this.postInfo();
+    
   },
 
   data() {
     return {
-      friends: [],
       posts: [],
       file: [],
       picPick: false,
@@ -281,27 +285,12 @@ export default {
   methods: {
     friendsList() {
       this.load = true;
-      const url = 'https://jsonplaceholder.typicode.com/users';
-      axios
-        .get(url)
-        .then((response) => {
-          this.friends = response.data;
-          // eslint-disable-next-line no-plusplus
           for (let i = 0; i < this.friends.length; i++) {
-            this.friends[i].pic = `./static/friend${i + 1}.jpg`;
-
             this.friends[i].postTime = 'Last week';
             this.friends[i].postCommente = [];
           }
-        })
-        .finally(() => {
-          // eslint-disable-next-line no-plusplus
-          for (let i = 0; i < this.friends.length; i++) {
-            this.friends[i].post = this.pics.friends[i];
-            this.friends[i].postPhr = this.posts[i].body;
-          }
-        });
     },
+
     postsList() {
       this.load = true;
       const url = 'https://jsonplaceholder.typicode.com/posts';
@@ -311,7 +300,11 @@ export default {
           this.posts = response.data;
         })
         .finally(() => {
-          this.load = false;
+          for (let i = 0; i < this.friends.length; i++) {
+            this.friends[i].post = this.pics.friends[i];
+            this.friends[i].postPhr = this.posts[i].body;
+            this.load = false;
+          }
         });
     },
     /* commentShow(index) {
@@ -325,7 +318,7 @@ export default {
       // eslint-disable-next-line no-unused-expressions
       this.color ? (cor.style.color = 'red') : (cor.style.color = 'white');
     },
-    teste() {
+    toPost() {
       if (this.myPostTxt.trim() === '') {
         this.alertPost = true;
         return;
@@ -358,12 +351,17 @@ export default {
     myPostDel(index) {
       this.myPost.splice(index);
     },
+    postInfo() {
+        this.$emit('addpost', this.pics.friends)
+      
+    }
   },
 };
 </script>
 <style lang=''>
 #postes {
-  left: 17%;
+  /*left: 5%;*/
+  z-index: 1;
 }
 #fp {
   right: 1em;

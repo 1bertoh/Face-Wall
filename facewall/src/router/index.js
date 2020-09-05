@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import telaLogin from '@/components/telaLogin';
+import telaLogin from '@/components/telaLogin/telaLogin';
 import telaLogada from '@/components/telaLogada';
 import friendsList from '@/components/friendsList/friendsList';
 import chatRoom from '@/components/posts/chatRoom';
