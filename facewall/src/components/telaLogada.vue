@@ -12,7 +12,7 @@
         fab
         text
         class="hidden-md-and-up"
-        :to="{name:'chatRoom', params: {chat: conversation}}"
+        :to="{name:'chatRoom', params: {normalizados: this.normalizados.chat}}"
       >
         <v-icon>chat_bubble</v-icon>
       </v-btn>
@@ -41,13 +41,16 @@
               <v-list-item>Profile</v-list-item>
               <br />
             </v-list-item>
+            <v-list-item
+              :to="{path:'/'}">
+              <v-list-item>Logout</v-list-item>
+              <br />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
     </v-app-bar>
     <!--Fim menu nav-->
-
-
 
     <v-row justify='center'>
       <v-col md="3" class="hidden-sm-and-down">
@@ -67,6 +70,7 @@
         :friends = 'friends'
         :normalizados = 'normalizados'
         @addpost = 'addPosts($event)'
+        @tocomment = 'toCommentPost($event)'
         class="mt-12" />
         <!--Fim componen de posts-->
       </v-col>
@@ -219,8 +223,11 @@ export default {
           this.friends = response.data;
           for (let i = 0; i < this.friends.length; i++) {
             this.friends[i].pic = `./static/friend${i + 1}.jpg`;
-            this.friends[i].chat = this.conversation[i] // add o obj chat nos friends
+            this.friends[i].chat = this.conversation[i]; // add o obj chat nos friends
+            this.friends[i].postComment = [];
+            this.friends[i].showComment = false;
             this.friends[i].post = this.friendsPostsPic[i];
+            this.friends[i].postTxt = '';
             this.postPicRender(i);
           }
           this.toNormalize();
@@ -273,7 +280,22 @@ export default {
         this.friends[i].postType1 = 'v-carousel';
         this.friends[i].postType2 = 'v-carousel-item';
       }
-    }
+    },
+    toCommentPost(comment) {
+      const id = comment[1]
+      const comentario = comment[0]
+      const commentArr = this.normalizados[id].postComment;
+      commentArr.push({
+        comentario,
+        nome: `${this.$route.params.firstName} 
+          ${this.$route.params.middleName} 
+          ${this.$route.params.lastName}`,
+      })
+      this.normalizados[id] = Object.assign({}, this.normalizados[id], {
+        postComment: commentArr,
+        postTxt: null,
+      });
+    },
   },
 };
 </script>

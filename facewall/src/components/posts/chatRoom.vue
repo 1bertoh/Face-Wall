@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-card height="100vh" id="cardColor" class>
+    <v-card class="light-green accent-3
+">
       <v-toolbar color="purple">
         <v-toolbar-title class="white--text display-1">
           <span>Face</span>
@@ -8,30 +9,7 @@
         </v-toolbar-title>
       </v-toolbar>
       <div>
-        <v-flex md4 class="d-flex justify-left">
-          <v-navigation-drawer
-            height="90vh"
-            mini-variant-width="80"
-            permanent
-            expand-on-hover
-            id="drawerColor"
-            class
-          >
-            <v-list id="lista" v-for="(friend, index) in friends" :key="friend.nome" dense>
-              <v-list-item class="px-2" :class="{onlinee : online == true,
-              offline : online == false}" @click="changeChat(index)">
-                <v-list-item-avatar>
-                  <v-img :src="friend.pic"></v-img>
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title class="title">{{friend.name}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-          </v-navigation-drawer>
-        </v-flex>
+        
         <v-layout row wrap>
           <v-card id="box" elevation="15">
             <div id="box1">
@@ -44,7 +22,7 @@
                   </v-col>
                   <!--listagem do chat em elação ao indice=id, cada if refere-se ao índece+1=id-->
                   <v-col v-if="0==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[0]" :key="chat.index">
+                    <div  v-for="(chat, index) in conversation" :key="chat.index">
                       <p v-show="chat.received" id="p1">
                         <span class="caption">{{chat.recTime}}</span>
                         <br />
@@ -58,140 +36,7 @@
                     </div>
                   </v-col>
 
-                  <v-col v-if="1==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[1]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="2==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[2]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="3==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[3]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="4==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[4]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="5==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[5]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="6==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[6]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="7==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[7]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="8==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[8]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
-
-                  <v-col v-if="9==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation[9]" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
-                        <span class="caption">{{chat.recTime}}</span>
-                        <br />
-                        <span>{{chat.received}}</span>
-                      </p>
-                      <p id="p2" class="text-right">
-                        <span class="caption">{{chat.sentTime}}</span>
-                        <br />
-                        <span class="pr-2">{{chat.sent}}</span>
-                      </p>
-                    </div>
-                  </v-col>
+                  
                   <!-- para criar novos chats basta criar novos elementos-->
                   <!--Fim da listagem de chat-->
                 </v-row>
@@ -216,6 +61,30 @@
               </v-col>
             </v-row>
           </v-card>
+          <v-flex md4 class="d-flex justify-left">
+          <v-navigation-drawer
+            height="91vh"
+            mini-variant-width="82"
+            permanent
+            expand-on-hover
+            id="drawerColor"
+            class
+          >
+            <v-list id="lista" v-for="(friend, index) in friends" :key="friend.nome" dense>
+              <v-list-item class="px-2" :class="{onlinee : online == true,
+              offline : online == false}" @click="changeChat(index)">
+                <v-list-item-avatar>
+                  <v-img :src="friend.pic"></v-img>
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title class="title">{{friend.name}}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+          </v-navigation-drawer>
+        </v-flex>
         </v-layout>
       </div>
     </v-card>
@@ -238,6 +107,7 @@ export default {
       cn: 0,
       online: true,
       toy: 'chat.sentTime0',
+      normalizadosLocal: {},
       chattxt: '',
       teste: [
         [{ rt0: '18:30' }, { r0: 'oie' }, { st: '18:35' }, { s0: 'td bem?' }],
@@ -343,6 +213,7 @@ export default {
           this.friends[i].SentTime = [];
         }
       });
+      this.normalizadosLocal = Object.assign({}, this.$route.params.normalizados)
     },
     changeChat(index) {
       this.cn = index;
@@ -376,7 +247,6 @@ export default {
 </script>
 <style lang=''>
 #drawerColor {
-  z-index: 1;
   background-color: rebeccapurple;
   height: 20em;
 }
@@ -384,9 +254,7 @@ export default {
   height: 4em;
   overflow: hidden;
 }
-#cardColor {
-  background-color: #c0ca33;
-}
+
 #box {
   background-color: #e6ee9c;
   position: absolute;
