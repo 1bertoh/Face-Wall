@@ -16,17 +16,20 @@
               <div>
                 <v-row>
                   <v-col cols="2" sm="2" xs="2">
-                    <v-avatar size color="red" width="50" height="50">
-                      <img :src="this.friends[cn].pic" alt="alt" />
+                    <v-avatar size color="red"
+                    class="ml-2"
+                    width="50" height="50">
+                      <img :src="normalizados[friendId].pic" alt="alt" />
                     </v-avatar>
                   </v-col>
-                  <!--listagem do chat em elação ao indice=id, cada if refere-se ao índece+1=id-->
-                  <v-col v-if="0==this.cn" cols="10" sm="9" xs="9">
-                    <div  v-for="(chat, index) in conversation" :key="chat.index">
-                      <p v-show="chat.received" id="p1">
+
+                  <v-col cols="10" sm="9" xs="9">
+                    <div  v-for="(chat, index) in normalizados[friendId].chat" :key="chat.index">
+                      <p id="p1">
                         <span class="caption">{{chat.recTime}}</span>
                         <br />
-                        <span>{{chat.received}}</span>
+                        <span
+                        class="pr-2">{{chat.received}}</span>
                       </p>
                       <p id="p2" class="text-right">
                         <span class="caption">{{chat.sentTime}}</span>
@@ -35,25 +38,21 @@
                       </p>
                     </div>
                   </v-col>
-
-                  
-                  <!-- para criar novos chats basta criar novos elementos-->
-                  <!--Fim da listagem de chat-->
                 </v-row>
               </div>
             </div>
-            <v-row id="textBox">
-              <v-col cols="10" sm="10" xs="10">
+
+            <v-row >
+              <v-col cols="9">
                 <v-text-field v-model="chattxt"
                 @keyup.enter="sendMsg" filled outlined name="name"
-                label id="chatText"></v-text-field>
+                label ></v-text-field>
               </v-col>
-              <v-col cols="2" xs="2" sm="2" class="d-flex justify-right">
+              <v-col cols="2">
                 <v-btn
-                  width="60"
-                  block
+                class=""
+                height="53"
                   color="success"
-                  id="sendBtn"
                   @click.prevent.stop="sendMsg()"
                 >
                   <v-icon>send</v-icon>
@@ -61,6 +60,7 @@
               </v-col>
             </v-row>
           </v-card>
+
           <v-flex md4 class="d-flex justify-left">
           <v-navigation-drawer
             height="91vh"
@@ -70,9 +70,9 @@
             id="drawerColor"
             class
           >
-            <v-list id="lista" v-for="(friend, index) in friends" :key="friend.nome" dense>
+            <v-list id="lista" v-for="(friend, index) in normalizados" :key="friend.nome" dense>
               <v-list-item class="px-2" :class="{onlinee : online == true,
-              offline : online == false}" @click="changeChat(index)">
+              offline : online == false}" @click="friendId = friend.id">
                 <v-list-item-avatar>
                   <v-img :src="friend.pic"></v-img>
                 </v-list-item-avatar>
@@ -101,120 +101,19 @@ export default {
     this.API_friends();
     this.time();
   },
+  props: ['normalizados'],
   data() {
     return {
-      friends: [],
-      cn: 0,
+      friendId: 1,
       online: true,
       toy: 'chat.sentTime0',
-      normalizadosLocal: {},
       chattxt: '',
-      teste: [
-        [{ rt0: '18:30' }, { r0: 'oie' }, { st: '18:35' }, { s0: 'td bem?' }],
-        [],
-      ],
-      conversation: [
-        [
-          {
-            // cada index é um id, dentro to index a ordem é receivedTime, received, sentTime e sent
-            received: 'oi',
-            recTime: '18:30',
-            sent: 'oiiw',
-            sentTime: '18:31',
-          },
-        ],
-        [
-          {
-            received: 'oin',
-            recTime: '04:13',
-            sent: 'saiu?',
-            sentTime: '07:56',
-          },
-        ],
-        [
-          {
-            received: 'hello',
-            recTime: '13:13',
-            sent: 'hi',
-            sentTime: '15:15',
-          },
-        ],
-        [
-          {
-            received: 'hola!',
-            recTime: '15:78',
-            sent: 'que tal?',
-            sentTime: '14:17',
-          },
-        ],
-        [
-          {
-            received: '14+17=?',
-            recTime: '14:17',
-            sent: 'não sei',
-            sentTime: '22:48',
-          },
-        ],
-        [
-          {
-            received: 'nihao',
-            recTime: '12:30',
-            sent: 'nihao',
-            sentTime: '12:35',
-          },
-        ],
-        [
-          {
-            received: 'ohayo',
-            recTime: '20:14',
-            sent: 'ohayo',
-            sentTime: '22:49',
-          },
-        ],
-        [
-          {
-            received: 'xablau',
-            recTime: '15:38',
-            sent: 'gluglu ie ie',
-            sentTime: '14:09',
-          },
-        ],
-        [
-          {
-            received: 'vem?',
-            recTime: '03:45',
-            sent: 'vou',
-            sentTime: '03:46',
-          },
-        ],
-        [
-          {
-            received: 'olha',
-            recTime: '06:30',
-            sent: 'elaaa!',
-            sentTime: '09:22',
-          },
-        ],
-      ],
     };
   },
 
   computed: {},
 
   methods: {
-    API_friends() {
-      const url = 'https://jsonplaceholder.typicode.com/users';
-      axios.get(url).then((response) => {
-        this.friends = response.data;
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < this.friends.length; i++) {
-          this.friends[i].pic = `./static/friend${i + 1}.jpg`;
-          this.friends[i].sent = [];
-          this.friends[i].SentTime = [];
-        }
-      });
-      this.normalizadosLocal = Object.assign({}, this.$route.params.normalizados)
-    },
     changeChat(index) {
       this.cn = index;
     },
@@ -223,7 +122,7 @@ export default {
       const d = new Date();
       const hours = d.getHours();
       const minutes = d.getMinutes();
-      this.conversation[this.cn].push({
+      this.normalizados[this.friendId].chat.push({
         sentTime: `${hours}: ${minutes}`,
         sent: this.chattxt,
       });
@@ -266,25 +165,18 @@ export default {
   padding: 1em;
 }
 #box1 {
+  background-color: #d3d48b;
   border: 1px dotted black;
   position: relative;
   height: 23em;
-  overflow-y: auto;
+  overflow: scroll;
+  overflow-x: hidden
 }
 #p1 {
   background-color: ;
   min-height: 2em;
   min-width: 3em;
   max-width: 80%;
-}
-#textBox {
-  position: fixed;
-  width: 30em;
-  top: 29em;
-}
-#sendBtn {
-  height: 4em;
-  width: 5em;
 }
 #oi {
   border-left: 3px solid greenyellow;

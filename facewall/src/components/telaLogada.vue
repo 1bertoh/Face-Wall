@@ -11,10 +11,11 @@
       <v-btn
         fab
         text
+        @click="goToChatRoom('go')"
         class="hidden-md-and-up"
-        :to="{name:'chatRoom', params: {normalizados: this.normalizados.chat}}"
       >
-        <v-icon>chat_bubble</v-icon>
+        <v-icon
+        >chat_bubble</v-icon>
       </v-btn>
       <div class="text-center">
         <v-menu offset-y>
@@ -99,6 +100,7 @@ export default {
   name: 'telaLogada',
   created() {
     this.friendsList();
+    this.goToChatRoom()
   },
   components: {
     FriendsPosts,
@@ -295,6 +297,14 @@ export default {
         postComment: commentArr,
         postTxt: null,
       });
+    },
+    goToChatRoom(i) {
+      if ( i === 'go') {
+        this.$router.push({
+        name: 'chatRoom',
+      });
+      }
+      this.$emit('getnormalizados', this.normalizados)
     },
   },
 };

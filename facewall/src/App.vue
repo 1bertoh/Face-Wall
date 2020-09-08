@@ -1,7 +1,9 @@
 <template>
   <v-app>
 
-  <router-view></router-view>
+  <router-view
+  @getnormalizados='getNormalizados($event)'
+  :normalizados='normalizados'></router-view>
   </v-app>
 </template>
 
@@ -9,9 +11,16 @@
 <script>
 export default {
   name: 'App',
-    data: () => ({
-      drawer: false,
-    }),
+    data() {
+      return {
+        normalizados: {},
+      }
+    },
+    methods: {
+      getNormalizados(norm) {
+        this.normalizados = Object.assign({}, this.normalizados, norm)
+      }
+    }
   
 };
 </script>

@@ -26,7 +26,7 @@ export default new Router({
       component: friendsList,
     },
     {
-      path: '/chatRoom/:normalizados',
+      path: '/chatRoom',
       name: 'chatRoom',
       component: chatRoom,
     },
