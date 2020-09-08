@@ -3,7 +3,7 @@
     <!--Menu nav-->
     <v-app-bar fixed hide-on-scroll dark class="purple darken-4">
       <v-toolbar-title class="white--text display-1">
-        <span @click="goToProfile">Face</span>
+        <span>Face</span>
         <span class="font-weight-black">Wall</span>
       </v-toolbar-title>
 
@@ -32,13 +32,7 @@
               <br />
             </v-list-item>
             <v-list-item
-              :to="{name:'profile',
-              params: {firstName: this.$route.params.firstName, middleName:
-              this.$route.params.middleName, lastName: this.$route.params.lastName,
-              email: this.$route.params.email, phone: this.$route.params.phone,
-              estado: this.$route.params.estado, municipio: this.$route.params.municipio,
-              gender:this.$route.params.gender, bd:this.$route.params.bd,
-              pic: this.$route.params.pic } }">
+              @click="goToProfile('me')">
               <v-list-item>Profile</v-list-item>
               <br />
             </v-list-item>
@@ -72,6 +66,7 @@
         :normalizados = 'normalizados'
         @addpost = 'addPosts($event)'
         @tocomment = 'toCommentPost($event)'
+        @gotoprofile = 'goToProfile($event)'
         class="mt-12" />
         <!--Fim componen de posts-->
       </v-col>
@@ -245,8 +240,9 @@ export default {
       this.friendId = id;
       this.miniChat = true;
     },
-    goToProfile() {
-      this.$router.push({
+    goToProfile(id) {
+      if (id === 'me') {
+        this.$router.push({
         name: 'profile',
         params: {
           firstName: this.$route.params.firstName,
@@ -259,8 +255,28 @@ export default {
           gender: this.$route.params.gender,
           bd: this.$route.params.birthday,
           pic: this.$route.params.pic,
+          profilePic: this.$route.params.pic,
         },
       });
+      } else {
+        this.$router.push({
+        name: 'profile',
+        params: {
+          firstName: this.normalizados[id].name,
+          middleName: '',
+          lastName: '',
+          email: this.normalizados[id].email,
+          phone: this.normalizados[id].phone,
+          estado: this.normalizados[id].city,
+          municipio: this.normalizados[id].street,
+          gender: 'N/A',
+          bd: this.$route.params.birthday,
+          pic: this.$route.params.pic,
+          profilePic: this.normalizados[id].pic,
+        },
+      });
+      }
+      
     },
     sendMsg(txt) {
       const d = new Date();

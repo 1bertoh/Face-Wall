@@ -43,7 +43,7 @@
         <v-row>
           <v-col cols="12" md="4" class="d-sm-flex d-flex justify-center">
             <v-avatar width="180" height="180">
-              <img :src="dados.pic" alt />
+              <img :src="dados.profilePic" alt />
             </v-avatar>
           </v-col>
           <v-col cols="12" md="8" class="d-sm-flex justify-center d-flex justify-center">
@@ -101,12 +101,10 @@ import axios from 'axios';
 export default {
   name: 'profile',
   created() {
-    this.friendsList();
     this.idade();
   },
   data() {
     return {
-      friends: [],
       nome: `${this.$route.params.firstName} ${this.$route.params.middleName} ${this.$route.params.lastName}`,
       dados: this.$route.params,
       idadebd: this.$route.params.bd,
@@ -114,17 +112,7 @@ export default {
     };
   },
   methods: {
-    friendsList() {
-      this.load = true;
-      const url = 'https://jsonplaceholder.typicode.com/users';
-      axios.get(url).then((response) => {
-        this.friends = response.data;
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < this.friends.length; i++) {
-          this.friends[i].pic = `./static/friend${i + 1}.jpg`;
-        }
-      });
-    },
+    
     idade() {
       const date = new Date().toISOString().substr(0, 10);
       const dataNasc = this.idadebd.split('-');
@@ -144,7 +132,6 @@ export default {
       }
 
       idade = idade < 0 ? 0 : idade;
-
       this.age = idade;
     },
   },

@@ -114,9 +114,6 @@ export default {
   computed: {},
 
   methods: {
-    changeChat(index) {
-      this.cn = index;
-    },
     sendMsg() {
       if (this.chattxt.trim() === '' ) { this.alertPost = true; return; }
       const d = new Date();
@@ -191,5 +188,39 @@ export default {
 }
 .offline {
   border-left:0.4em solid red ;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+::-webkit-scrollbar-button {
+  width: 18px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(117, 126, 214);
+  border: 0px none rgb(117, 126, 214);
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(117, 126, 214);
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgb(117, 126, 214);
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 </style>

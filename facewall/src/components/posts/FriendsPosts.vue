@@ -25,17 +25,23 @@
           </v-row>
           <v-col v-show="picPick" cols="12" md class>
             <v-banner>
-              <input type="file" @change="onFileChange" />
+              <input type="file"
+              id="inputFile"
+              @change="onFileChange" />
               <v-btn @click="picPick = !picPick" text color="primary">Cancel</v-btn>
             </v-banner>
           </v-col>
 
+          <p
+          class="text-right mr-2 caption">
+          {{fileName}}
+          </p>
           <v-row justify="end">
             <v-col cols="12" md="5" class="d-flex justify-end">
               <v-btn id="btn" color="success">
                 <v-icon>sentiment_satisfied_alt</v-icon>
               </v-btn>
-              <v-btn id="btn" @click="picPick = !picPick" color="success">
+              <v-btn id="btn" @click="getFile" color="success">
                 <v-icon>add_photo_alternate</v-icon>
               </v-btn>
 
@@ -52,11 +58,13 @@
           :key="post.text"
           class="my-3"
         >
-          <v-list-item class="py-2">
+          <v-list-item @click="$emit('gotoprofile', 'me')" class="py-2">
             <v-list-item-avatar width="55" height="60" color="gray">
               <img :src="$route.params.pic" alt />
             </v-list-item-avatar>
-            <v-list-item-content class="font-weight-medium headline" left>
+            <v-list-item-content
+            
+            class="font-weight-medium headline" left>
               {{post.nome}}
               <span class="font-weight-medium caption">{{post.postTime}}</span>
             </v-list-item-content>
@@ -119,11 +127,14 @@
           mb-${hover ? 4 : 1}`"
                     class="mx-auto pa-6 transition-swing light-green accent-3"
                   >
-                  <v-list-item class="">
+                  <v-list-item
+                  @click="$emit('gotoprofile', 'me')"
+                  class="">
             <v-list-item-avatar width="35" class="pb-2" height="40" color="gray">
               <img :src="$route.params.pic" alt />
             </v-list-item-avatar>
-            <v-list-item-content class="font-weight-black " left>
+            <v-list-item-content
+            class="font-weight-black " left>
               <p
               class="text-right">
                 {{post.nome}}
@@ -165,11 +176,14 @@
           class="my-3 transition-swing"
         >
           <v-layout row wrap>
-            <v-list-item class="py-2">
+            <v-list-item
+            @click="$emit('gotoprofile', friend.id)"
+            class="py-2">
               <v-list-item-avatar width="55" height="60" color="gray">
                 <img :src="friend.pic" alt />
               </v-list-item-avatar>
-              <v-list-item-content class="font-weight-medium headline" left>
+              <v-list-item-content
+              class="font-weight-medium headline" left>
                 {{friend.name}}
                 <span class="font-weight-medium caption">last week</span>
               </v-list-item-content>
@@ -292,6 +306,7 @@ export default {
       myPostTxt: '',
       myPost: [],
       postComment: '',
+      fileName:'',
       pics: {
         friends: [
           ['static/amigosFotos/1.jpg', 'static/amigosFotos/2.jpg'],
@@ -389,6 +404,7 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
+      this.fileName = file.name;
     },
     toComment(id, index) {
       if (id === 'myComment') {
@@ -416,6 +432,9 @@ export default {
         this.normalizados[postIndex].postComment.splice(commPost, 1);
       }
     },
+    getFile() {
+    document.getElementById('inputFile').click();
+    }
   },
 };
 </script>
